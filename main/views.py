@@ -6,6 +6,9 @@ def show_main(request):
         'price': '50.000',
         'description': 'A very interesting read!',
         'quantity': '2',
+        'person' : 'Bertrand Gwynfory Iskandar',
+        'npm' : '2306152121',
+        'class' : 'PBP C',
     }
 
     return render(request, "main.html", context)
