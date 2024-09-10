@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Bukulapak</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 100%;
+            height: 96vh;
+            background-color: #1b1b32;
+            color: #f5f6f7;
+            font-family: Tahoma;
+            font-size: 16px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 40px;
+            margin-bottom: 5px;
+        }
+        p {
+            font-size: 20px;
+        }
+
+        .product-details {
+            background-color: #46469f;
+            border-radius: 20px;
+            padding: 20px;
+            margin: auto;
+            width: 45%;
+            max-width: 50%;
+            margin-top: 0;
+            text-align: left;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            background-color: #46469f;
+            width: 45%;
+            max-width: 50%;
+            border-radius: 70px;
+            padding: 10px;
+            margin: auto;
+            margin-top: 30px;
+            margin-bottom: 50px;
+        }
+
+        .footer {
+            padding: 5px;
+        }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+        <h1>Welcome to Bukulapak!</h1>
+        <p>Sumber buku nomor 1 di pacil!</p>
+    </div>
+    <div class="product-details">
+        <h2>Produk 1</h2>
+        <p><strong>Name:</strong> {{ name }}</p>
+        <p><strong>Price:</strong> Rp{{ price }}</p>
+        <p><strong>Description:</strong> {{ description }}</p>
+        <p><strong>Stock:</strong> {{ quantity }}</p>
+    </div>
+    <div class="footer">
+        <p>Created by Bertrand Gwynfory Iskandar - 2306152121 - PBP C</p>
+    </div>
+  </body>
+</html>
