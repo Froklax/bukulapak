@@ -6,6 +6,7 @@ def show_main(request):
         'price': '50.000',
         'description': 'A very interesting read!',
         'quantity': '2',
+        'nama_aplikasi' : 'Bukulapak',
         'person' : 'Bertrand Gwynfory Iskandar',
         'npm' : '2306152121',
         'class' : 'PBP C',

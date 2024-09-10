@@ -66,6 +66,7 @@ Live web app : [Bukulapak](http://bertrand-gwynfory-bukulapak.pbp.cs.ui.ac.id/)
             'price': '50.000',
             'description': 'A very interesting read!',
             'quantity': '2',
+            'nama_aplikasi' : 'Bukulapak',
             'person' : 'Bertrand Gwynfory Iskandar',
             'npm' : '2306152121',
             'class' : 'PBP C',
