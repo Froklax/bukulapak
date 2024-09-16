@@ -5,8 +5,8 @@ Number 1 online bookstore in Pacil!!!
 Live web app : [Bukulapak](http://bertrand-gwynfory-bukulapak.pbp.cs.ui.ac.id/)
 
 ### Fast Links
-- [Tugas 3](#tugas-3)
-- [Tugas 2](#tugas-2)
+- [Tugas 3](#tugas-3-pertanyaan-dan-jawaban)
+- [Tugas 2](#tugas-2-pertanyaan-dan-jawaban)
 
 ## Tugas 3 : Pertanyaan dan Jawaban
 
