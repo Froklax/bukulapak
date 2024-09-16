@@ -4,7 +4,37 @@ Number 1 online bookstore in Pacil!!!
 ### Deployment
 Live web app : [Bukulapak](http://bertrand-gwynfory-bukulapak.pbp.cs.ui.ac.id/)
 
-## Pertanyaan dan Jawaban
+### Fast Links
+- [Tugas 3](#tugas-3)
+- [Tugas 2](#tugas-2)
+
+## Tugas 3 : Pertanyaan dan Jawaban
+
+### Jelaskan mengapa kita memerlukan data delivery dalam pengimplementasian sebuah platform?
+
+### Mana yang lebih baik antara XML dan JSON? Mengapa JSON lebih populer dibandingkan XML?
+
+### Jelaskan fungsi dari method `is_valid()` pada form Django dan mengapa kita membutuhkan method tersebut?
+
+### Mengapa kita membutuhkan csrf_token saat membuat form di Django? Apa yang dapat terjadi jika kita tidak menambahkan csrf_token pada form Django? Bagaimana hal tersebut dapat dimanfaatkan oleh penyerang?
+
+### Langkah Implementasi Checklist
+
+### Screenshot Hasil Akses Keempat URL Pada Postman
+**XML**
+![XML](./images/xml.png)
+
+**XML BY ID**
+![XML BY ID](./images/xmlbyid.png)
+
+**JSON**
+![JSON](./images/json.png)
+
+**JSON BY ID**
+![JSON BY ID](./images/jsonbyid.png)
+
+
+## Tugas 2 : Pertanyaan dan Jawaban
 
 ### Langkah Implementasi Checklist
 
@@ -98,7 +128,7 @@ Live web app : [Bukulapak](http://bertrand-gwynfory-bukulapak.pbp.cs.ui.ac.id/)
 
 ### Bagan Berisi Request Client ke Web Aplikasi Berbasis Django Beserta Responnya
 
-![Bagan](/bagan.png)
+![Bagan](./images/bagan.png)
 
 Alur permintaan di aplikasi Django dimulai ketika `Client` mengirimkan request ke server Django. Pertama-tama, urls.py menentukan fungsi mana di views.py yang harus menangani request tersebut. Setelah permintaan diarahkan ke fungsi yang tepat di views.py, fungsi ini akan memproses data dan, jika diperlukan, bekerja dengan models.py untuk `read` atau `write` data di database. Setelah pemrosesan selesai, views.py akan menggunakan template HTML yang ada di folder templates untuk merender tampilan akhir. Hasil dari render ini kemudian dikirim kembali ke `Client` sebagai respons HTTP dari server Django.
 
