@@ -70,7 +70,7 @@ Jika `csrf_token` tidak digunakan, penyerang dapat membuat halaman palsu yang be
          return render(request, "create_book_entry.html", context)
    ```
 
-   - Selanjutnya saya membuat template HTML bernama `create_book_entry.html` untuk menampilkan form.
+   - Selanjutnya, saya membuat template HTML bernama `create_book_entry.html` untuk menampilkan form.
 
    ```HTML
       {% extends 'base.html' %} 
