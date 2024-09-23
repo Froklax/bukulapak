@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block meta %}
+<title>Login</title>
+{% endblock meta %}
+
+{% block content %}
+<div class="login">
+  <h1 class="form-title">Login to Bukulapak</h1>
+
+  <form method="POST" action="" class="login-form">
+    {% csrf_token %}
+    <table class="form-table">
+      {{ form.as_table }}
+      <tr>
+        <td></td>
+        <td class="login-btn"><input class="btn login_btn" type="submit" value="Login" /></td>
+      </tr>
+    </table>
+  </form>
+
+  {% if messages %}
+  <ul>
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %} 
+  <div class="register-section">
+    Don't have an account yet? <a href="{% url 'main:register' %}" class="register-btn">Register Now</a>
+  </div>
+</div>
+
+{% endblock content %}
