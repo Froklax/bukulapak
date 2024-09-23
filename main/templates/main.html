@@ -6,6 +6,27 @@
 {% endblock meta %}
 
 {% block content %}
+<header class="top-strip">
+  <div class="user-info">
+    <i class="fas fa-user"></i>
+    <p>{{ nama_user }}</p>
+  </div>
+  <nav class="nav-links">
+    <a href="#">Home</a>
+    <a href="#">Products</a>
+    <a href="#">About</a>
+    <a href="#">Contact</a>
+  </nav>
+  <div class="logout-container">
+      <a href="{% url 'main:logout' %}">
+          <button class="add-button"><i class="fas fa-sign-out-alt"></i> Logout</button>
+      </a>
+  </div>
+</header>
+<div class="last-login-container">
+  <h5 class="last-login"><i class="fas fa-clock icon-spacing"></i> Last Login: {{ last_login }}</h5>
+</div>
+
 <div class="container">
     <h1>Welcome to {{ nama_aplikasi }}!</h1>
     <p>Sumber buku nomor 1 di pacil!</p>
