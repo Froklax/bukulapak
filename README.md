@@ -121,17 +121,470 @@ Grid adalah model _layout_ dua dimensi yang memungkinkan kita untuk membuat _des
 
 2. **Kustomisasi desain pada template HTML menggunakan Tailwind**
 
-- Pertama, saya menambahkan tag `<meta name="viewport">` untuk responsive terhadap perangkat mobile beserta dengan script Tailwind pada file `base.html`.
+- Pertama, saya menambahkan tag `<meta name="viewport">` untuk responsive terhadap perangkat mobile beserta dengan script Tailwind pada file `base.html`. Saya juga menambahkan _icons_ dari _font awesome_ dan font Manrope untuk membuat tampilan lebih menarik. 
 
 ```HTML
    <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap">
    <script src="https://cdn.tailwindcss.com"></script>
 ```
 
-- Lalu saya membuat sebuah file css baru bernama `global.css` untuk mengubah beberapa tampilan pada aplikasi saya.
+- Kemudian, saya membuat sebuah file css baru bernama `global.css` untuk mengubah beberapa tampilan pada aplikasi saya.
+
+```CSS
+   .form-style form input, form textarea, form select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 2px solid #bcbcbc;
+    border-radius: 0.375rem;
+   }
+   .form-style form input:focus, form textarea:focus, form select:focus {
+      outline: none;
+      border-color: #674ea7;
+      box-shadow: 0 0 0 3px #674ea7;
+   }
+   @keyframes shine {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+   }
+   .animate-shine {
+      background: linear-gradient(120deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.3));
+      background-size: 200% 100%;
+      animation: shine 3s infinite;
+   }
+
+   .manrope {
+      font-family: 'Manrope', Tahoma, sans-serif;
+   }
+```
+
+- Saya juga menambahkan `middleware` WhiteNoise pada `settings.py` agar _static files_ dapat diakses saat di deployment.
+
+```python
+   STATIC_URL = '/static/'
+   if DEBUG:
+      STATICFILES_DIRS = [
+         BASE_DIR / 'static' # merujuk ke /static root project pada mode development
+      ]
+   else:
+      STATIC_ROOT = BASE_DIR / 'static' # merujuk ke /static root project pada mode production
+```
+
+- Selanjutnya, saya mengubah tampilan pada `login.html`, `register.html`, dan `create_book_entry.html` menjadi lebih menarik menggunakan Tailwind.
+
+Tampilan login.html:
 
 ```HTML
-   
+   {% extends 'base.html' %}
+
+   {% block meta %}
+   <title>Login to Bukalapak</title>
+   {% endblock meta %}
+
+   {% block content %}
+   <div class="manrope min-h-screen flex items-center justify-center w-screen bg-blue-950 py-12 px-4 sm:px-6 lg:px-8">
+      <div class="container mb-20 bg-violet-900 max-w-md w-full space-y-8 p-12 rounded-lg shadow-lg">
+         <div>
+            <h2 class="mt-6 text-center text-3xl font-extrabold text-white">
+               Login to Bukulapak
+            </h2>
+         </div>
+         <form class="mt-8 space-y-6" method="POST" action="">
+            {% csrf_token %}
+            <input type="hidden" name="remember" value="true">
+            <div class="rounded-md shadow-sm -space-y-px">
+               <div class="mb-4">
+                  <label for="username" class="sr-only">Username</label>
+                  <input id="username" name="username" type="text" required class="appearance-none rounded-full relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Username">
+               </div>
+               <div>
+                  <label for="password" class="sr-only">Password</label>
+                  <input id="password" name="password" type="password" required class="appearance-none rounded-full relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Password">
+               </div>
+            </div>
+         
+            <div>
+               <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-full text-white bg-blue-600 hover:bg-blue-950 hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300 ease-in-out">
+                  Sign in
+               </button>
+            </div>
+         </form>    
+
+         {% if messages %}
+         <div class="mt-4">
+            {% for message in messages %}
+            {% if message.tags == "success" %}
+                  <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+                     <span class="block sm:inline">{{ message }}</span>
+                  </div>
+            {% elif message.tags == "error" %}
+                  <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                     <span class="block sm:inline">{{ message }}</span>
+                  </div>
+            {% else %}
+                  <div class="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative" role="alert">
+                     <span class="block sm:inline">{{ message }}</span>
+                  </div>
+            {% endif %}
+            {% endfor %}
+         </div>
+         {% endif %}
+
+         <div class="text-center mt-4">
+            <p class="text-lg text-white">
+               Don't have an account yet?
+               <a href="{% url 'main:register' %}" class="font-medium text-indigo-200 hover:text-indigo-300">
+                  Register Now
+               </a>
+            </p>
+         </div>
+      </div>
+   </div>
+   {% endblock content %}
+```
+
+Tampilan `register.html`:
+
+```HTML
+   {% extends 'base.html' %}
+
+   {% block meta %}
+   <title>Register</title>
+   {% endblock meta %}
+
+   {% block content %}
+   <div class="manrope min-h-screen flex items-center justify-center bg-blue-950 py-12 px-4 sm:px-6 lg:px-8">
+      <div class="container mb-20 bg-violet-900 rounded-lg max-w-lg w-full p-12 space-y-8 form-style">
+         <div>
+            <h2 class="mt-3 text-center text-3xl font-extrabold text-white">
+               Create your account
+            </h2>
+         </div>
+         <form class="mt-8 space-y-6" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="remember" value="true">
+            <div class="rounded-lg shadow-sm -space-y-px">
+               {% for field in form %}
+                  <div class="{% if not forloop.first %}mt-4{% endif %}">
+                     <label for="{{ field.id_for_label }}" class="mb-4 text-white font-extrabold text-base">
+                        {{ field.label }}
+                     </label>
+                     <div class="relative mt-1 mb-3">
+                        {{ field }}
+                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                           {% if field.errors %}
+                              <svg class="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                              </svg>
+                           {% endif %}
+                        </div>
+                     </div>
+                     {% if field.errors %}
+                        {% for error in field.errors %}
+                           <p class="mt-1 text-sm text-red-600">{{ error }}</p>
+                        {% endfor %}
+                     {% endif %}
+                  </div>
+               {% endfor %}
+            </div>
+
+            <div>
+               <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-full text-white bg-blue-600 hover:bg-blue-950 hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300 ease-in-out">
+                  Register
+               </button>
+            </div>
+         </form>
+
+         {% if messages %}
+         <div class="mt-4">
+            {% for message in messages %}
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            <span class="block sm:inline">{{ message }}</span>
+            </div>
+            {% endfor %}
+         </div>
+         {% endif %}
+
+         <div class="text-center mt-4">
+            <p class="text-lg text-white">
+               Already have an account?
+               <a href="{% url 'main:login' %}" class="font-medium text-indigo-200 hover:text-indigo-300">
+                  Login here
+               </a>
+            </p>
+         </div>
+      </div>
+   </div>
+   {% endblock content %}
+```
+
+Tampilan `create_book_entry.html`:
+
+```HTML
+   {% extends 'base.html' %}
+   {% load static %}
+   {% block meta %}
+   <title>Add Book</title>
+   {% endblock meta %}
+
+   {% block content %}
+   {% include 'navbar.html' %}
+
+   <div class="manrope flex flex-col min-h-screen bg-blue-950">
+      <div class="container mx-auto px-4 py-8 mt-16 max-w-xl">
+         <h1 class="text-3xl font-bold text-center mb-8 text-white">Add New Book</h1>
+      
+         <div class="bg-violet-900    shadow-md rounded-lg p-6 form-style">
+            <form method="POST" class="space-y-6">
+               {% csrf_token %}
+               {% for field in form %}
+                  <div class="flex flex-col">
+                     <label for="{{ field.id_for_label }}" class="mb-2 font-semibold text-white">
+                        {{ field.label }}
+                     </label>
+                     <div class="w-full">
+                        {{ field }}
+                     </div>
+                     {% if field.help_text %}
+                        <p class="mt-1 text-sm text-gray-500">{{ field.help_text }}</p>
+                     {% endif %}
+                     {% for error in field.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ error }}</p>
+                     {% endfor %}
+                  </div>
+               {% endfor %}
+               <div class="flex justify-center mt-6">
+                  <button type="submit" class="text-white font-semibold px-6 py-3 rounded-full bg-blue-600 hover:bg-blue-950 hover:opacity-80 transition duration-300 ease-in-out w-full">
+                     Create Mood Entry
+                  </button>
+               </div>
+            </form>
+         </div>
+      </div>
+   </div>
+
+   {% endblock %}
+```
+
+- Selanjutnya, saya kustomisasi halaman daftar produk, yaitu halaman utama `main.html` menjadi lebih menarik dan responsif.
+
+```HTML
+   {% extends 'base.html' %}
+   {% load static %}
+
+   {% block meta %}
+   <title>Bukulapak</title>
+   {% endblock meta %}
+   {% block content %}
+   {% include 'navbar.html' %}
+   <div class="manrope overflow-x-hidden px-4 md:px-8 pb-8 pt-24 min-h-screen bg-blue-950 flex flex-col">
+      <div class="p-2 mb-6 relative">
+         <div class="text-white text-2xl font-bold mb-6 ml-5">Created By</div>
+         <div class="relative grid grid-cols-1 z-30 md:grid-cols-3 gap-8">
+            {% include "card_info.html" with title='Name' value=person %}
+            {% include "card_info.html" with title='NPM' value=npm %}
+            {% include "card_info.html" with title='Class' value=class %}
+         </div>
+         <div class="w-full px-6 absolute top-[44px] left-0 z-20 hidden md:flex mt-14">
+            <div class="w-full min-h-4 bg-indigo-700">
+            </div>
+         </div>
+         <div class="h-full w-full py-6 absolute top-0 left-0 z-20 md:hidden flex">
+            <div class="h-full min-w-4 bg-indigo-700 mx-auto">
+            </div>
+         </div>
+      </div>
+      <div class="px-3 mb-4">
+         <div class="flex rounded-md items-center bg-indigo-600 py-2 px-4 w-fit">
+            <h1 class="text-white text-center">Last Login: {{last_login}}</h1>
+         </div>
+      </div>
+      <div class="flex justify-between items-center mb-6 mt-20">
+         <h2 class="text-2xl font-bold text-white ml-5">Available Books</h2>
+         <a href="{% url 'main:create_book_entry' %}" class="bg-blue-600 hover:bg-blue-700 hover:opacity-80 text-white font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105">
+            <i class="fas fa-plus mr-2"></i>Add New Book
+         </a>
+      </div>
+      
+      <div class="container mx-auto bg-violet-900 rounded-xl w-full max-w-full p-20">
+         {% if not books %}
+         <div class="flex flex-col items-center justify-center min-h-[24rem] p-6">
+            <img src="{% static 'image/sedih-banget.png' %}" alt="Sad face" class="w-32 h-32 mb-4"/>
+            <p class="text-center text-white mt-4">Belum ada data buku pada Bukulapak.</p>
+         </div>
+         {% else %}
+         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
+            {% for book_entry in books %}
+            {% include 'card_book.html' with book_entry=book_entry %}
+            {% endfor %}
+         </div>
+         {% endif %}
+      </div>
+   </div>
+   {% endblock content %}
+```
+
+- Jika tidak ada buku yang terdaftar, saya menampilkan gambar dan pesan bahwa tidak ada buku yang terdaftar dengan bagian kode dibawah ini:
+
+```HTML
+   {% if not books %}
+   <div class="flex flex-col items-center justify-center min-h-[24rem] p-6">
+         <img src="{% static 'image/sedih-banget.png' %}" alt="Sad face" class="w-32 h-32 mb-4"/>
+         <p class="text-center text-white mt-4">Belum ada data buku pada Bukulapak.</p>
+   </div>
+```
+- Jika terdapat buku yang terdaftar, maka saya menampikannya menggunakan card yang sudah saya buat pada `card_book.html` seperti berikut:
+```HTML
+   <div class="manrope relative break-inside-avoid">
+      <div class="relative top-5 bg-gradient-to-r from-purple-300 via-indigo-400 to-violet-700 shadow-lg rounded-lg mb-6 break-inside-avoid flex flex-col border-2 border-indigo-300 transform hover:scale-105 transition-transform duration-300">
+         <div class="bg-blue-500 text-black p-4 rounded-t-lg border-b-2 border-indigo-300">
+            <h3 class="font-bold text-xl mb-2">{{book_entry.name}}</h3>
+            <p class="text-black">Rp. {{book_entry.price}}</p>
+         </div>
+         <div class="p-4">
+            <p class="font-semibold text-lg mb-2">Description</p>
+            <p class="text-black">{{book_entry.description}}</p> 
+            <p class="text-gray-700 mb-2">
+               <span class="bg-[linear-gradient(to_bottom,transparent_0%,transparent_calc(100%_-_1px),#CDC1FF_calc(100%_-_1px))] bg-[length:100%_1.5rem] pb-1">{{mood_entry.feelings}}</span>
+            </p>
+            <div class="mt-4">
+               <p class="text-black font-semibold mb-2">Stock</p>
+               <div class="relative pt-1">
+                  <div class="flex mb-2 items-center justify-between">
+                     <div>
+                     <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-indigo-600 bg-indigo-200">
+                        {{book_entry.quantity}}
+                     </span>
+                     </div>
+                  </div>
+                  <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-indigo-200">
+                     <div style="width:{% if book_entry.quantity > 10 %}100%{% else %}{{ book_entry.quantity }}0%{% endif %}" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-indigo-500"></div>
+                  </div>
+               </div>
+            </div>
+            <div class="flex justify-center space-x-4 mt-4">
+               <a href="{% url 'main:edit_book' book_entry.pk %}" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 shadow-md">
+                  <i class="fas fa-edit"></i> Edit
+               </a>
+               <a href="{% url 'main:delete_book' book_entry.pk %}" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 shadow-md">
+                  <i class="fas fa-trash-alt"></i> Delete
+               </a>
+            </div>
+         </div>
+      </div>
+   </div>
+```
+- dan pada `main.html` sebagai berikut:
+
+```HTML
+   {% else %}
+   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
+      {% for book_entry in books %}
+         {% include 'card_book.html' with book_entry=book_entry %}
+      {% endfor %}
+   </div>
+   {% endif %}
+```
+
+- Saya juga menambahkan button untuk mengedit dan menghapus buku pada _card_ pada bagian ini di `card_book.html`:
+
+```HTML
+   <div class="flex justify-center space-x-4 mt-4">
+      <a href="{% url 'main:edit_book' book_entry.pk %}" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 shadow-md">
+         <i class="fas fa-edit"></i> Edit
+      </a>
+      <a href="{% url 'main:delete_book' book_entry.pk %}" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 shadow-md">
+         <i class="fas fa-trash-alt"></i> Delete
+      </a>
+   </div>
+```
+
+- Terakhir, saya membuat sebuah navigation bar yang responsif terhadap ukuran device. Navigation bar berisi logo Bukulapak, _navigation links_, nama _user_ yang sedang logged in, dan tombol logout. Navigation bar ini akan ditampilkan pada `main.html`, `create_book_entry.html`, dan `edit_book.html`.
+
+```HTML
+   <nav class="bg-violet-900 shadow-lg fixed top-0 left-0 z-40 w-screen">
+      <div class="w-full px-4 sm:px-6 lg:px-8">
+         <div class="flex items-center justify-between h-16">
+            <!-- Logo Bukulapak -->
+            <div class="flex-shrink-0">
+               <h1 class="manrope text-2xl font-bold text-white">Bukulapak</h1>
+            </div>
+            
+            <!-- Navigasi tengah -->
+            <div class="hidden md:flex justify-center flex-grow ml-20">
+               <nav class="manrope nav-links flex space-x-4">
+                  <a href="{% url 'main:show_main' %}" class="text-white text-lg hover:bg-blue-950 px-3 py-2 rounded-md transition duration-300 hover:scale-110">Home</a>
+                  <a href="#" class="text-white text-lg hover:bg-blue-950 px-3 py-2 rounded-md transition duration-300 hover:scale-105">Products</a>
+                  <a href="#" class="text-white text-lg hover:bg-blue-950 px-3 py-2 rounded-md transition duration-300 hover:scale-105">Categories</a>
+                  <a href="#" class="text-white text-lg hover:bg-blue-950 px-3 py-2 rounded-md transition duration-300 hover:scale-105">Cart</a>
+               </nav>
+            </div>
+
+            <!-- User info dan logout -->
+            <div class="hidden md:flex items-center">
+               {% if user.is_authenticated %}
+                  <div class="flex items-center gap-2">
+                     <i class="fas fa-user text-white"></i>
+                     <span class="manrope text-white mr-4 text-lg">{{ user.username }}</span>
+                  </div>
+                  <a href="{% url 'main:logout' %}" class="manrope bg-blue-600 hover:bg-blue-950 hover:opacity-80 text-white font-bold py-2 px-4 rounded-full transition duration-300 hover:scale-105">
+                     <i class="fas fa-sign-out-alt mr-2"></i>
+                     Logout
+                  </a>
+               {% else %}
+                  <a href="{% url 'main:login' %}" class="text-center bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300 mr-2">
+                     Login
+                  </a>
+                  <a href="{% url 'main:register' %}" class="text-center bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition duration-300">
+                     Register
+                  </a>
+               {% endif %}
+            </div>
+            <div class="md:hidden flex items-center">
+               <button class="mobile-menu-button">
+                  <svg class="w-6 h-6 text-white" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                     <path d="M4 6h16M4 12h16M4 18h16"></path>
+                  </svg>
+               </button>
+            </div>
+         </div>
+      </div>
+      <!-- Mobile menu -->
+      <div class="manrope mobile-menu hidden md:hidden px-4 w-full md:max-w-full">
+         <div class="pt-2 pb-3 space-y-1 mx-auto">
+            <a href="{% url 'main:show_main' %}" class="block text-white text-lg hover:bg-blue-950 px-3 py-2 rounded-md transition duration-300">Home</a>
+            <a href="#" class="block text-white text-lg hover:bg-blue-950 px-3 py-2 rounded-md transition duration-300">Products</a>
+            <a href="#" class="block text-white text-lg hover:bg-blue-950 px-3 py-2 rounded-md transition duration-300">Categories</a>
+            <a href="#" class="block text-white text-lg hover:bg-blue-950 px-3 py-2 rounded-md transition duration-300">Cart</a>
+            {% if user.is_authenticated %}
+               <div class="flex items-center gap-2 px-3 py-2">
+                  <i class="fas fa-user text-white"></i>
+                  <span class="text-white text-base font-medium">{{ user.username }}</span>
+               </div>
+               <a href="{% url 'main:logout' %}" class="block text-center bg-blue-600 hover:bg-blue-950 hover:opacity-80 text-white font-bold py-2 px-4 rounded transition duration-300">
+                  Logout
+               </a>
+            {% else %}
+               <a href="{% url 'main:login' %}" class="block text-center bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300 mb-2">
+                  Login
+               </a>
+               <a href="{% url 'main:register' %}" class="block text-center bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition duration-300">
+                  Register
+               </a>
+            {% endif %}
+         </div>
+      </div>
+
+      <script>
+         const btn = document.querySelector("button.mobile-menu-button");
+         const menu = document.querySelector(".mobile-menu");
+
+         btn.addEventListener("click", () => {
+            menu.classList.toggle("hidden");
+         });
+      </script>
+   </nav>
 ```
 
 3. **Mengubah README.md.**
