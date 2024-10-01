@@ -65,11 +65,74 @@ Grid adalah model _layout_ dua dimensi yang memungkinkan kita untuk membuat _des
 
 1. **Implementasikan fungsi untuk menghapus dan mengedit product.**
 
-- 
+- Pertama, saya menambahkan fungsi baru bernama `edit_book` pada `views.py` yang akan digunakan untuk mengedit buku yang sudah ada sebelumnya.
+
+```python
+   def edit_book(request, id):
+      # Get book berdasarkan id
+      book = Product.objects.get(pk = id)
+
+      # Set book entry sebagai instance dari form
+      form = BookForm(request.POST or None, instance=book)
+
+      if form.is_valid() and request.method == "POST":
+         # Simpan form dan kembali ke halaman awal
+         form.save()
+         return HttpResponseRedirect(reverse('main:show_main'))
+
+      context = {'form': form}
+      return render(request, "edit_book.html", context)
+```
+
+- Selanjutnya, saya juga membuat fungsi baru bernama  `delete_book` pada `views.py` yang akan digunakan untuk menghapus buku yang sudah ada sebelumnya.
+
+```python
+   def delete_book(request, id):
+      # Get book berdasarkan id
+      book = Product.objects.get(pk = id)
+      # Hapus book
+      book.delete()
+      # Kembali ke halaman awal
+      return HttpResponseRedirect(reverse('main:show_main'))
+   ```
+
+- Langkah terakhir, saya mengimport fungsi `edit_book` dan `delete_book` yang sudah saya buat sebelumnya dan menambahkan path url untuk mengakses fungsi-fungsi yang di-import tersebut pada `urls.py`.
+
+```python
+   from django.urls import path
+   from main.views import show_main, create_book_entry, show_xml, show_json, show_xml_by_id, show_json_by_id, register, login_user, logout_user, edit_book, delete_book
+
+   app_name = 'main'
+
+   urlpatterns = [
+      path('', show_main, name='show_main'),
+      path('create-book-entry', create_book_entry, name='create_book_entry'),
+      path('xml/', show_xml, name='show_xml'),
+      path('json/', show_json, name='show_json'),
+      path('xml/<str:id>/', show_xml_by_id, name='show_xml_by_id'),
+      path('json/<str:id>/', show_json_by_id, name='show_json_by_id'),
+      path('register/', register, name='register'),
+      path('login/', login_user, name='login'),
+      path('logout/', logout_user, name='logout'),
+      path('edit-book/<uuid:id>', edit_book, name='edit_book'),
+      path('delete/<uuid:id>', delete_book, name='delete_book'),
+   ]
+```
 
 2. **Kustomisasi desain pada template HTML menggunakan Tailwind**
 
-- 
+- Pertama, saya menambahkan tag `<meta name="viewport">` untuk responsive terhadap perangkat mobile beserta dengan script Tailwind pada file `base.html`.
+
+```HTML
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <script src="https://cdn.tailwindcss.com"></script>
+```
+
+- Lalu saya membuat sebuah file css baru bernama `global.css` untuk mengubah beberapa tampilan pada aplikasi saya.
+
+```HTML
+   
+```
 
 3. **Mengubah README.md.**
 
