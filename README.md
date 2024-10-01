@@ -179,7 +179,7 @@ Tampilan login.html:
    {% extends 'base.html' %}
 
    {% block meta %}
-   <title>Login to Bukalapak</title>
+   <title>Login to Bukulapak</title>
    {% endblock meta %}
 
    {% block content %}
