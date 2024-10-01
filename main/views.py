@@ -42,7 +42,7 @@ def edit_book(request, id):
     # Get book berdasarkan id
     book = Product.objects.get(pk = id)
 
-    # Set mood entry sebagai instance dari form
+    # Set book entry sebagai instance dari form
     form = BookForm(request.POST or None, instance=book)
 
     if form.is_valid() and request.method == "POST":
