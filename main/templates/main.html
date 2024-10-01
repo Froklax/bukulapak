@@ -2,58 +2,51 @@
 {% load static %}
 
 {% block meta %}
-    <title>{{ nama_aplikasi }}</title>
+<title>Bukulapak</title>
 {% endblock meta %}
-
 {% block content %}
-<header class="top-strip">
-  <div class="user-info">
-    <i class="fas fa-user"></i>
-    <p>{{ nama_user }}</p>
+{% include 'navbar.html' %}
+<div class="navbar overflow-x-hidden px-4 md:px-8 pb-8 pt-24 min-h-screen bg-blue-950 flex flex-col">
+  <div class="p-2 mb-6 relative">
+    <div class="relative grid grid-cols-1 z-30 md:grid-cols-3 gap-8">
+      {% include "card_info.html" with title='Name' value=person %}
+      {% include "card_info.html" with title='NPM' value=npm %}
+      {% include "card_info.html" with title='Class' value=class %}
+    </div>
+    <div class="w-full px-6 absolute top-[44px] left-0 z-20 hidden md:flex">
+      <div class="w-full min-h-4 bg-indigo-700">
+      </div>
+    </div>
+    <div class="h-full w-full py-6 absolute top-0 left-0 z-20 md:hidden flex">
+      <div class="h-full min-w-4 bg-indigo-700 mx-auto">
+      </div>
+    </div>
   </div>
-  <nav class="nav-links">
-    <a href="#">Home</a>
-    <a href="#">Products</a>
-    <a href="#">About</a>
-    <a href="#">Contact</a>
-  </nav>
-  <div class="logout-container">
-      <a href="{% url 'main:logout' %}">
-          <button class="add-button"><i class="fas fa-sign-out-alt"></i> Logout</button>
-      </a>
+  <div class="px-3 mb-4">
+    <div class="flex rounded-md items-center bg-indigo-600 py-2 px-4 w-fit">
+      <h1 class="text-white text-center">Last Login: {{last_login}}</h1>
+    </div>
   </div>
-</header>
-<div class="last-login-container">
-  <h5 class="last-login"><i class="fas fa-clock icon-spacing"></i> Last Login: {{ last_login }}</h5>
-</div>
-
-<div class="container">
-    <h1>Welcome to {{ nama_aplikasi }}!</h1>
-    <p>Sumber buku nomor 1 di pacil!</p>
-</div>
-
-<a href="{% url 'main:create_book_entry' %}" class="button-container">
-    <button class="add-button">+ Add New Book</button>
-</a>
-
-{% if not books %}
-<p>Belum ada data buku pada Bukulapak.</p>
-{% else %}
-<div class="books-container">
-  {% for book in books %}
-  <div class="product-details">
-    <h2>{{ book.name }}</h2>
-    <p><strong>Price:</strong> Rp {{ book.price }}</p>
-    <p><strong>Description:</strong> {{ book.description }}</p>
-    <p><strong>Stock:</strong> {{ book.quantity }}</p>
+  <div class="flex justify-between items-center mb-6 mt-20">
+    <h2 class="text-2xl font-bold text-white ml-5">Available Books</h2>
+    <a href="{% url 'main:create_book_entry' %}" class="bg-blue-600 hover:bg-blue-700 hover:opacity-80 text-white font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105">
+      <i class="fas fa-plus mr-2"></i>Add New Book
+    </a>
   </div>
-  {% endfor %}
-</div>
-{% endif %}
-
-<br />
-
-<div class="footer">
-    <p>Created by {{ person }} - {{ npm }} - {{ class }}</p>
+  
+  <div class="container mx-auto bg-violet-900 rounded-xl w-full max-w-full p-20">
+    {% if not books %}
+    <div class="flex flex-col items-center justify-center min-h-[24rem] p-6">
+      <img src="{% static 'image/sedih-banget.png' %}" alt="Sad face" class="w-32 h-32 mb-4"/>
+      <p class="text-center text-white mt-4">Belum ada data buku pada Bukulapak.</p>
+    </div>
+    {% else %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
+      {% for book_entry in books %}
+        {% include 'card_book.html' with book_entry=book_entry %}
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
 </div>
 {% endblock content %}
