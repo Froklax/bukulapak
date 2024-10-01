@@ -1,5 +1,5 @@
 import datetime
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from main.forms import BookForm
 from main.models import Product
 from django.http import HttpResponse, HttpResponseRedirect
@@ -14,33 +14,13 @@ from django.contrib import messages
 def show_main(request):
     books = Product.objects.filter(user=request.user)
 
-    fetch_books = [{'name': book.name, 'price': book.price, 'description': book.description, 'quantity': book.quantity} for book in books]
-
-    default_books = [
-        {
-            'name' : 'Purcell Kalkulus',
-            'price': '50000',
-            'description': 'Buat lulus kalkulus!',
-            'quantity': '2',
-        },
-        
-        {
-            'name' : 'Rosen Matdis',
-            'price': '40000',
-            'description': 'Buat lulus matdis!',
-            'quantity': '2',
-        }
-    ]
-
-    all_books = default_books + fetch_books
-
     context = { 
         'nama_user': request.user.username,
         'nama_aplikasi' : 'Bukulapak',
         'person' : 'Bertrand Gwynfory Iskandar',
         'npm' : '2306152121',
         'class' : 'PBP C',
-        'books' : all_books,
+        'books' : books,
         'last_login': request.COOKIES['last_login'],
     }
 
@@ -57,6 +37,29 @@ def create_book_entry(request):
 
     context = {'form': form}
     return render(request, "create_book_entry.html", context)
+
+def edit_book(request, id):
+    # Get book berdasarkan id
+    book = Product.objects.get(pk = id)
+
+    # Set mood entry sebagai instance dari form
+    form = BookForm(request.POST or None, instance=book)
+
+    if form.is_valid() and request.method == "POST":
+        # Simpan form dan kembali ke halaman awal
+        form.save()
+        return HttpResponseRedirect(reverse('main:show_main'))
+
+    context = {'form': form}
+    return render(request, "edit_book.html", context)
+
+def delete_book(request, id):
+    # Get book berdasarkan id
+    book = Product.objects.get(pk = id)
+    # Hapus book
+    book.delete()
+    # Kembali ke halaman awal
+    return HttpResponseRedirect(reverse('main:show_main'))
 
 def register(request):
     form = UserCreationForm()
