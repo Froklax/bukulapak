@@ -8,12 +8,13 @@
 {% include 'navbar.html' %}
 <div class="manrope overflow-x-hidden px-4 md:px-8 pb-8 pt-24 min-h-screen bg-blue-950 flex flex-col">
   <div class="p-2 mb-6 relative">
+    <div class="text-white text-2xl font-bold mb-6 ml-5">Created By</div>
     <div class="relative grid grid-cols-1 z-30 md:grid-cols-3 gap-8">
       {% include "card_info.html" with title='Name' value=person %}
       {% include "card_info.html" with title='NPM' value=npm %}
       {% include "card_info.html" with title='Class' value=class %}
     </div>
-    <div class="w-full px-6 absolute top-[44px] left-0 z-20 hidden md:flex">
+    <div class="w-full px-6 absolute top-[44px] left-0 z-20 hidden md:flex mt-14">
       <div class="w-full min-h-4 bg-indigo-700">
       </div>
     </div>
