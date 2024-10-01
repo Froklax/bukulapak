@@ -134,10 +134,10 @@ Grid adalah model _layout_ dua dimensi yang memungkinkan kita untuk membuat _des
 
 ```CSS
    .form-style form input, form textarea, form select {
-    width: 100%;
-    padding: 0.5rem;
-    border: 2px solid #bcbcbc;
-    border-radius: 0.375rem;
+      width: 100%;
+      padding: 0.5rem;
+      border: 2px solid #bcbcbc;
+      border-radius: 0.375rem;
    }
    .form-style form input:focus, form textarea:focus, form select:focus {
       outline: none;
