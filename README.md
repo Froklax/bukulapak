@@ -5,9 +5,75 @@ Number 1 online bookstore in Pacil!!!
 Live web app : [Bukulapak](http://bertrand-gwynfory-bukulapak.pbp.cs.ui.ac.id/)
 
 ### Fast Links
+- [Tugas 5](#tugas-5)
 - [Tugas 4](#tugas-4)
 - [Tugas 3](#tugas-3)
 - [Tugas 2](#tugas-2)
+
+## Tugas 5
+
+### Jika terdapat beberapa CSS selector untuk suatu elemen HTML, jelaskan urutan prioritas pengambilan CSS selector tersebut!
+
+Terdapat urutan prioritas (specificity) yang akan menentukan CSS selector yang akan digunakan jika terdapat banyak CSS selector yang digunakan pada suatu elemen HTML yang sama. Urutan prioritasnya adalah sebagai berikut:
+
+1. **Inline Styles**: Style yang dimasukkan langsung ke dalam elemen HTML menggunakan atribut `style`.
+
+2. **Id Selector**:  Selector yang menggunakan atribut `id` elemen, ditulis dengan tanda `#`.
+
+3. **Class Selector**: Selector yang menggunakan atribut `class` elemen, ditulis dengan tanda `.`.
+
+4. **Tag Selector**: Selector dengan prioritas terendah, langsung menggunakan tag HTML seperti `body`, `p`, dan `h1`.
+
+5. **Browser Default**: Styles yang diterapkan oleh browser sebagai default.
+
+### Mengapa responsive design menjadi konsep yang penting dalam pengembangan aplikasi web? Berikan contoh aplikasi yang sudah dan belum menerapkan responsive design!
+
+Responsive design adalah konsep penting dalam pengembangan aplikasi web karena memungkinkan tampilan dan fungsi situs web menyesuaikan dengan berbagai ukuran layar dan perangkat yang diggunakan oleh _user_. Responsive design penting untuk memastikan pengalaman `user` yang konsisten dan optimal di berbagai ukuran layar berbeda seperti di desktop, tablet, dan _handphone_.
+
+### Contoh Aplikasi yang Sudah Menerapkan Repsonsive Design:
+- **Google**: Fitur untuk _searching_ tetap responsif di berbagai perangkat berbeda.
+- **Twitter**: Menyediakan berbagai tampilan dan fungsionalitas yang menyesuaikan dengan perangkat yang digunakan.
+
+### Contoh Aplikasi yang Belum Menerapkan Responsive Design:
+
+- **Pacil Web Service**: Tidak ada support untuk perangkat _mobile_, sehingga tidak bisa melihat informasi proyek-proyek di PWS jika menggunakan perangkat _mobile_.
+
+### Jelaskan perbedaan antara margin, border, dan padding, serta cara untuk mengimplementasikan ketiga hal tersebut!
+
+- **Margin**: Ruang di luar elemen, antara elemen dengan elemen lainnya. Fungsinya untuk mengatur jarak antara suatu elemen dengan elemen lainnya.
+
+- **Border**: Batasan yang mengelilingi elemen. Dapat digunakan untuk mengatur ruang antara margin dan padding, serta membuat sebuah border mengelilingi elemen seperti yang kita ketahui.
+
+- **Padding**: Ruang di dalam elemen, antara konten dalam elemen border elemen tersebut. Padding digunakan untuk memberi jarak antara konten dan ujung elemen.
+
+**Cara Implementasi:**
+```CSS
+   .container {
+      margin: 5px;   /* Memberi jarak 5px antara .container dengan elemen lain*/
+      border: 5px solid; /* Membuat border setebal 5px dan juga menambahkan ruang 5px antara margin dan padding*/
+      padding: 5px;  /* Memberi jarak 5px antara konten dalam elemen dengan ujung elemen*/
+   }
+```
+
+### Jelaskan konsep flex box dan grid layout beserta kegunaannya!
+
+Flex box adalah model _layout_ satu dimensi untuk menyusun secara vertikal atau horizontal. Elemen ini akan "_flex_" yaitu akan membesar atau mengecil tergantung aturan yang didefinisikan. Flex box memungkinkan elemen di dalam _container_ untuk diatur secara otomatis tergantung dengan ukuran _viewport_, yang memudahkan kita untuk membuat _layout_ yang fleksibel dan responsif. 
+
+Grid adalah model _layout_ dua dimensi yang memungkinkan kita untuk membuat _design_ yang lebih kompleks dengan baris dan kolom. Grid memungkinkan kita untuk menyusun item secara baris dan kolom. _Grid layout_ bagus dalam membagi halaman menjadi beberapa area utama, seperti header, konten utama, dan footer atau menentukan hubungan dalam hal ukuran, posisi, dan ruang yang diambil antara bagian.
+
+### Langkah Implementasi Checklist
+
+1. **Implementasikan fungsi untuk menghapus dan mengedit product.**
+
+- 
+
+2. **Kustomisasi desain pada template HTML menggunakan Tailwind**
+
+- 
+
+3. **Mengubah README.md.**
+
+- Terakhir, saya mengubah `README.md` yang sebelumnya telah saya buat untuk menambahkan jawaban dari pertanyaan-pertanyaan yang diberikan pada Tugas 5.
 
 ## Tugas 4
 
