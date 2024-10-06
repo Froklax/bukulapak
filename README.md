@@ -13,6 +13,24 @@ Live web app : [Bukulapak](http://bertrand-gwynfory-bukulapak.pbp.cs.ui.ac.id/)
 
 ## Tugas 6
 
+### Jelaskan manfaat dari penggunaan JavaScript dalam pengembangan aplikasi web!
+
+JavaScript memberikan banyak manfaat dalam pengembangan aplikasi web. Dengan JavaScript, kita bisa membuat aplikasi yang lebih interaktif dan _responsive_, memungkinkan _user_ berinteraksi dengan halaman web tanpa perlu me-refresh seluruh halaman. Kemampuan JavaScript untuk memanipulasi DOM secara dinamis memungkinkan kita mengubah konten dan tampilan halaman secara _real-time_. Selain itu, JavaScript memungkinkan validasi form di sisi _client_ yang dapat meningkatkan kecepatan respons dan mengurangi beban server. Melalui AJAX, JavaScript juga memudahkan komunikasi _asynchronous_ dengan server, sehingga kita bisa memperbarui data tanpa mengganggu pengalaman _user_. JavaScript juga menjadi dasar untuk pengembangan Single Page Applications (SPA) yang memberikan pengalaman seperti aplikasi desktop dalam browser web. JavaScript juga bersifat lintas platform yang memungkinkan aplikasi web kita berjalan di berbagai browser dan perangkat.
+
+### Jelaskan fungsi dari penggunaan `await` ketika kita menggunakan `fetch()`! Apa yang akan terjadi jika kita tidak menggunakan `await`?
+
+`await` digunakan untuk menunggu hasil dari operasi _asynchronous_ sebelum melanjutkan eksekusi kode berikutnya. Ketika kita menggunakan `fetch()`, kita menggunakannya dengan `await` untuk menunggu _response_ dari server sebelum melanjutkan. Jika kita tidak menggunakan await, kode berikutnya akan dieksekusi sebelum `fetch()` selesai yang dapat menyebabkan terdapat data yang tidak lengkap dan membuat sebuah kesalahan. 
+
+### Mengapa kita perlu menggunakan _decorator_ `csrf_exempt` pada _view_ yang akan digunakan untuk AJAX `POST`?
+
+`csrf_exempt` digunakan untuk "_exempt_" atau mengecualikan perlindungan CSRF (Cross-Site Request Forgery) pada _view_ yang digunakan untuk AJAX `POST`. Ini dilakukan karena AJAX `POST` request biasanya tidak menyertakan `csrf_token` secara otomatis, dimana server akan menolak request tersebut karena tidak ada `csrf_token`. Dengan menggunakan `csrf_exempt`, ini memungkinkan request AJAX `POST` diterima tanpa verifikasi CSRF. 
+
+###  Pada tutorial PBP minggu ini, pembersihan data input pengguna dilakukan di belakang (_backend_) juga. Mengapa hal tersebut tidak dilakukan di _frontend_ saja?
+
+Pembersihan data input pengguna dilakukan di _backend_ dan tidak pada _frontend_ saja untuk memastikan keamanan  data yang diterima oleh server. Meskipun pembersihan data di _frontend_ dapat membantu meningkatkan pengalaman pengguna dengan memberikan _feedback_ langsung, hal ini tidak cukup untuk melindungi aplikasi dari serangan berbahaya. _User_ yang jahat dapat memanipulasi data sebelum dikirim ke server, sehingga validasi dan pembersihan di _frontend_ saja tidak dapat diandalkan. Dengan melakukan pembersihan data di _backend_, kita dapat memastikan bahwa semua data yang masuk telah melalui proses validasi yang ketat dan konsisten untuk melindungi aplikasi dari serangan seperti SQL injection dan XSS (Cross-Site Scripting), yang bisa saja tidak terdeteksi oleh validasi _frontend_. Selain itu, pembersihan data di _backend_ juga memastikan bahwa data yang disimpan dan diproses oleh aplikasi selalu dalam format yang benar dan aman.
+
+### Langkah Implementasi Checklist
+
 
 
 ## Tugas 5
