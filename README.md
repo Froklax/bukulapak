@@ -5,10 +5,15 @@ Number 1 online bookstore in Pacil!!!
 Live web app : [Bukulapak](http://bertrand-gwynfory-bukulapak.pbp.cs.ui.ac.id/)
 
 ### Fast Links
+- [Tugas 6](#tugas-6)
 - [Tugas 5](#tugas-5)
 - [Tugas 4](#tugas-4)
 - [Tugas 3](#tugas-3)
 - [Tugas 2](#tugas-2)
+
+## Tugas 6
+
+
 
 ## Tugas 5
 
