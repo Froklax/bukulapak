@@ -2,25 +2,25 @@ import datetime
 from django.shortcuts import render, redirect, reverse
 from main.forms import BookForm
 from main.models import Product
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.core import serializers
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+from django.utils.html import strip_tags
 
 @login_required(login_url='/login')
 def show_main(request):
-    books = Product.objects.filter(user=request.user)
-
     context = { 
         'nama_user': request.user.username,
         'nama_aplikasi' : 'Bukulapak',
         'person' : 'Bertrand Gwynfory Iskandar',
         'npm' : '2306152121',
         'class' : 'PBP C',
-        'books' : books,
         'last_login': request.COOKIES['last_login'],
     }
 
@@ -37,6 +37,39 @@ def create_book_entry(request):
 
     context = {'form': form}
     return render(request, "create_book_entry.html", context)
+
+@csrf_exempt
+@require_POST
+def add_book_entry_ajax(request):
+    name = strip_tags(request.POST.get("name"))
+    price = request.POST.get("price")
+    description = strip_tags(request.POST.get("description"))
+    quantity = request.POST.get("quantity")
+    user = request.user
+    
+    errors = {}
+
+    if not name:
+        errors['name'] = "Name field cannot be blank."
+    if not description:
+        errors['description'] = "Description field cannot be blank."
+    if not price or not price.isdigit() or int(price) <= 0:
+        errors['price'] = "Price not valid."
+    if not quantity or not quantity.isdigit() or int(quantity) <= 0:
+        errors['quantity'] = "Price not valid."
+
+
+    if errors:
+        return JsonResponse(errors, status=400)
+        
+    new_book = Product(
+        name=name, price=price,
+        description=description, quantity=quantity,
+        user=user
+    )
+    new_book.save()
+
+    return HttpResponse(b"CREATED", status=201)
 
 def edit_book(request, id):
     # Get book berdasarkan id
@@ -96,11 +129,11 @@ def logout_user(request):
     return response
 
 def show_xml(request):
-    data = Product.objects.all()
+    data = Product.objects.filter(user=request.user)
     return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
 
 def show_json(request):
-    data = Product.objects.all()
+    data = Product.objects.filter(user=request.user)
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 
 def show_xml_by_id(request, id):
