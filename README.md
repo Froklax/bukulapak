@@ -31,7 +31,107 @@ Pembersihan data input pengguna dilakukan di _backend_ dan tidak pada _frontend_
 
 ### Langkah Implementasi Checklist
 
+1. **Implementasi AJAX GET**
 
+- Pertama, saya mengubah fungsi `show_json` dan `show_xml` agar memfilter data buku berdasarkan _user_ yang sudah _logged-in_.
+
+```python
+   def show_xml(request):
+    data = Product.objects.filter(user=request.user)
+    return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
+
+   def show_json(request):
+      data = Product.objects.filter(user=request.user)
+      return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+```
+
+- Selanjutnya, saya membuat fungsi JavaScript baru pada `main.html` bernama `getBookEntries` untuk melakukan _request_ AJAX `GET`. Fungsi ini menggunakan API `fetch()` untuk mengirim _request_ URL  yang sesuai dengan funsi `show_json`.
+
+```JAVASCRIPT
+   async function getBookEntries(){
+      return fetch("{% url 'main:show_json' %}").then((res) => res.json())
+   }
+```
+
+- Terakhir, saya menambahkan `div` dengan `id="book_entry_cards"` dan membuat fungsi JavaScript bernama `refreshBookEntries` pada `main.html`. Fungsi ini menggunakan `await getBookEntries()` untuk mendapatkan data buku terbaru secara _asynchronous_. Fungsi ini juga memiliki string html yang memuat `card` buku yang menampilkan data berdasarkan hasil dari AJAX `GET` yaitu `fetch` yang dilakukan oleh `getBookEntries`. Fungsi ini juga memperbarui elemen `book_entry_cards` dengan kelas CSS dan konten HTML yang dibuat.
+
+```HTML
+   <div id="book_entry_cards"></div>
+```
+
+```JAVASCRIPT
+   async function refreshBookEntries() {
+    document.getElementById("book_entry_cards").innerHTML = "";
+    document.getElementById("book_entry_cards").className = "";
+    const bookEntries = await getBookEntries();
+    let htmlString = "";
+    let classNameString = "";
+
+    if (bookEntries.length === 0) {
+        classNameString = "flex flex-col items-center justify-center min-h-[24rem] p-6";
+        htmlString = `
+            <div class="flex flex-col items-center justify-center min-h-[24rem] p-6">
+                <img src="{% static 'image/sedih-banget.png' %}" alt="Sad face" class="w-32 h-32 mb-4"/>
+                <p class="text-center text-white mt-4">Belum ada data buku pada Bukulapak.</p>
+            </div>
+        `;
+    }
+    else {
+        classNameString = "columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6 w-full"
+        bookEntries.forEach((item) => {
+            const name = DOMPurify.sanitize(item.fields.name);
+            const description = DOMPurify.sanitize(item.fields.description);
+            htmlString += `
+            <div class="manrope relative break-inside-avoid">
+                <div class="relative top-5 bg-gradient-to-r from-purple-300 via-indigo-400 to-violet-700 shadow-lg rounded-lg mb-6 break-inside-avoid flex flex-col border-2 border-indigo-300 transform hover:scale-105 transition-transform duration-300">
+                    <div class="bg-gradient-to-r from-purple-400 to-violet-800 text-black p-4 rounded-t-lg border-b-2 border-indigo-300">
+                        <h3 class="font-bold text-xl mb-2">${item.fields.name}</h3>
+                        <p class="text-black">Rp. ${item.fields.price}</p>
+                    </div>
+                    <div class="p-4">
+                        <p class="font-semibold text-lg mb-2">Description</p>
+                        <p class="text-black">${item.fields.description}</p>
+                        <div class="mt-4">
+                            <p class="text-black font-semibold mb-2">Stock</p>
+                            <div class="relative pt-1">
+                                <div class="flex mb-2 items-center justify-between">
+                                    <div>
+                                        <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-indigo-600 bg-indigo-200">
+                                            ${item.fields.quantity}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-indigo-200">
+                                    <div style="width: ${item.fields.quantity > 10 ? 100 : item.fields.quantity * 10}%;" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-indigo-500"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex justify-center space-x-4 mt-4">
+                            <a href="/edit-book/${item.pk}" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 shadow-md">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <a href="/delete/${item.pk}" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 shadow-md">
+                                <i class="fas fa-trash-alt"></i> Delete
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            `;
+        });
+    }
+    document.getElementById("book_entry_cards").className = classNameString;
+    document.getElementById("book_entry_cards").innerHTML = htmlString;
+}
+```
+
+2. **Implementasi AJAX `POST`**
+
+- 
+
+3. **Mengubah README.md.**
+
+- Terakhir, saya mengubah `README.md` yang sebelumnya telah saya buat untuk menambahkan jawaban dari pertanyaan-pertanyaan yang diberikan pada Tugas 6.
 
 ## Tugas 5
 
