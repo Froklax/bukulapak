@@ -184,7 +184,7 @@ Pembersihan data input pengguna dilakukan di _backend_ dan tidak pada _frontend_
    </div>
 ```
 
-- Tombol ini akan mengeksekusi fungsi `showModal` ketika di _click_ yang digunakan untuk menampilkan modal.
+- Tombol ini akan menjalankan fungsi `showModal` ketika di _click_ yang digunakan untuk menampilkan modal.
 
 ```JAVASCRIPT
    function showModal() {
