@@ -53,7 +53,7 @@ Pembersihan data input pengguna dilakukan di _backend_ dan tidak pada _frontend_
    }
 ```
 
-- Terakhir, saya menambahkan `div` dengan `id="book_entry_cards"` dan membuat fungsi JavaScript bernama `refreshBookEntries` pada `main.html`. Fungsi ini menggunakan `await getBookEntries()` untuk mendapatkan data buku terbaru secara _asynchronous_. Fungsi ini juga memiliki string html yang memuat `card` buku yang menampilkan data berdasarkan hasil dari AJAX `GET` yaitu `fetch` yang dilakukan oleh `getBookEntries`. Fungsi ini juga memperbarui elemen `book_entry_cards` dengan kelas CSS dan konten HTML yang dibuat.
+- Terakhir, saya menambahkan `div` dengan `id="book_entry_cards"` dan membuat fungsi JavaScript bernama `refreshBookEntries` pada `main.html`. Fungsi ini menggunakan `await getBookEntries()` untuk mendapatkan data buku terbaru secara _asynchronous_. Fungsi ini juga memiliki string html yang memuat `card` buku yang menampilkan data berdasarkan hasil dari AJAX `GET` yaitu `fetch()` yang dilakukan oleh `getBookEntries`. Fungsi ini juga memperbarui elemen `book_entry_cards` dengan kelas CSS dan konten HTML yang dibuat.
 
 ```HTML
    <div id="book_entry_cards"></div>
@@ -127,7 +127,253 @@ Pembersihan data input pengguna dilakukan di _backend_ dan tidak pada _frontend_
 
 2. **Implementasi AJAX `POST`**
 
-- 
+- Pertama, saya membuat sebuah tombol yang akan membuka modal dengan form yang akan menambahkan buku.
+
+```HTML
+   <button data-modal-target="crudModal" data-modal-toggle="crudModal" class="btn bg-blue-600 hover:bg-blue-700 hover:opacity-80 text-white font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105" onclick="showModal();">
+      <i class="fas fa-plus mr-2"></i>Add New Book by AJAX
+   </button>
+```
+
+- Tampilan dari modal adalah form sebagai berikut, secara default modal ini `hidden` yaitu tersembunyi dari tampilan _user_.
+
+```JAVASCRIPT
+   <div id="crudModal" tabindex="-1" aria-hidden="true" class="hidden fixed inset-0 z-50 w-full flex items-center justify-center bg-gray-800 bg-opacity-50 overflow-x-hidden overflow-y-auto transition-opacity duration-300 ease-out">
+      <div id="crudModalContent" class="relative bg-violet-900 rounded-lg shadow-lg w-5/6 sm:w-3/4 md:w-1/2 lg:w-1/3 mx-4 sm:mx-0 transform scale-95 opacity-0 transition-transform transition-opacity duration-300 ease-out">
+         <!-- Modal header -->
+         <div class="flex items-center justify-between p-4 border-b rounded-t">
+         <h3 class="text-xl font-semibold text-white">
+            Add New Book Entry
+         </h3>
+         <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" id="closeModalBtn">
+            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+               <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+            </svg>
+            <span class="sr-only">Close modal</span>
+         </button>
+         </div>
+         <!-- Modal body -->
+         <div class="px-6 py-4 space-y-6 form-style">
+         <form id="bookEntryForm">
+            <div class="mb-4">
+               <label for="name" class="block text-sm font-medium text-white">Name</label>
+               <input type="text" id="name" name="name" class="mt-1 block w-full border border-gray-300 rounded-md p-2 hover:border-indigo-700" placeholder="Enter book name" required>
+               <span id="name-error" class="text-red-500 text-sm"></span>
+            </div>
+            <div class="mb-4">
+               <label for="price" class="block text-sm font-medium text-white">Price</label>
+               <input type="number" id="price" name="price" min="1" class="mt-1 block w-full border border-gray-300 rounded-md p-2 hover:border-indigo-700" required>
+            </div>
+            <div class="mb-4">
+               <label for="description" class="block text-sm font-medium text-white">Description</label>
+               <textarea id="description" name="description" rows="3" class="mt-1 block w-full h-52 resize-none border border-gray-300 rounded-md p-2 hover:border-indigo-700" placeholder="Describe this book" required></textarea>
+               <span id="description-error" class="text-red-500 text-sm"></span>
+            </div>
+            <div class="mb-4">
+               <label for="quantity" class="block text-sm font-medium text-white">Stock</label>
+               <input type="number" id="quantity" name="quantity" min="1" class="mt-1 block w-full border border-gray-300 rounded-md p-2 hover:border-indigo-700" required>
+            </div>
+         </form>
+         </div>
+         <!-- Modal footer -->
+         <div class="flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2 p-6 border-t border-gray-200 rounded-b justify-center md:justify-end">
+         <button type="button" class="bg-red-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105" id="cancelButton">Cancel</button>
+         <button type="submit" id="submitBookEntry" form="bookEntryForm" class="bg-blue-600 hover:bg-blue-950 hover:opacity-80 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105">Save</button>
+         </div>
+      </div>
+   </div>
+```
+
+- Tombol ini akan mengeksekusi fungsi `showModal` ketika di _click_ yang digunakan untuk menampilkan modal.
+
+```JAVASCRIPT
+   function showModal() {
+      const modal = document.getElementById('crudModal');
+      const modalContent = document.getElementById('crudModalContent');
+
+      modal.classList.remove('hidden'); 
+      setTimeout(() => {
+        modalContent.classList.remove('opacity-0', 'scale-95');
+        modalContent.classList.add('opacity-100', 'scale-100');
+      }, 50); 
+   }
+```
+
+- Saya juga membuat fungsi `hideModal` yang dijalankan ketika user _click_ pada cancel button atau close modal button.
+
+```JAVASCRIPT
+   function hideModal() {
+      const modal = document.getElementById('crudModal');
+      const modalContent = document.getElementById('crudModalContent');
+
+      modalContent.classList.remove('opacity-100', 'scale-100');
+      modalContent.classList.add('opacity-0', 'scale-95');
+
+      setTimeout(() => {
+        modal.classList.add('hidden');
+      }, 150); 
+   }
+
+   document.getElementById("cancelButton").addEventListener("click", hideModal);
+   document.getElementById("closeModalBtn").addEventListener("click", hideModal);
+```
+
+- Selanjutnya, saya membuat fungsi baru bernama `add_book_entry_ajax` pada `views.py` yang akan digunakan untuk menambahkan buku ke dalam basis data. Saya juga menambahkan bagian errors yang akan menyimpan pesan error yang sesuai.
+
+```python
+   @csrf_exempt
+   @require_POST
+   def add_book_entry_ajax(request):
+      name = strip_tags(request.POST.get("name"))
+      price = request.POST.get("price")
+      description = strip_tags(request.POST.get("description"))
+      quantity = request.POST.get("quantity")
+      user = request.user
+      
+      errors = {}
+
+      if not name:
+         errors['name'] = "Name field cannot be blank."
+      if not description:
+         errors['description'] = "Description field cannot be blank."
+      if not price or not price.isdigit() or int(price) <= 0:
+         errors['price'] = "Price not valid."
+      if not quantity or not quantity.isdigit() or int(quantity) <= 0:
+         errors['quantity'] = "Price not valid."
+
+
+      if errors:
+         return JsonResponse(errors, status=400)
+         
+      new_book = Product(
+         name=name, price=price,
+         description=description, quantity=quantity,
+         user=user
+      )
+      new_book.save()
+
+      return HttpResponse(b"CREATED", status=201)
+```
+
+- Kemudian, saya mengimport fungsi `add_book_entry_ajax` dan menambahkan path `/create-ajax/` pada `urls.py` untuk mengakses fungsi yang sudah di-import.
+
+```python
+   from django.urls import path
+   from main.views import show_main, create_book_entry, show_xml, show_json, show_xml_by_id, show_json_by_id, register, login_user, logout_user, edit_book, delete_book, add_book_entry_ajax
+
+   app_name = 'main'
+
+   urlpatterns = [
+      path('', show_main, name='show_main'),
+      path('create-book-entry', create_book_entry, name='create_book_entry'),
+      path('xml/', show_xml, name='show_xml'),
+      path('json/', show_json, name='show_json'),
+      path('xml/<str:id>/', show_xml_by_id, name='show_xml_by_id'),
+      path('json/<str:id>/', show_json_by_id, name='show_json_by_id'),
+      path('register/', register, name='register'),
+      path('login/', login_user, name='login'),
+      path('logout/', logout_user, name='logout'),
+      path('edit-book/<uuid:id>', edit_book, name='edit_book'),
+      path('delete/<uuid:id>', delete_book, name='delete_book'),
+      path('create-ajax/', add_book_entry_ajax, name='add_book_entry_ajax'),
+   ]
+```
+
+- Untuk menghubungkan form yang telah dibuat pada modal dengan path `/create-ajax/`, saya membuat fungsi bernama `addBookEntry` pada `main.html` yang menggunakan `fetch()` untuk mengirimkan form dengan `method: "POST"` ke URL yang ditentukan, yaitu `"{% url 'main:add_book_entry_ajax' %}"`. URL ini merupakan path `/create-ajax/` yang merujuk pada view `add_book_entry_ajax`. Saya juga menampilkan `alert` berdasarkan pesan errors yang sudah saya buat tadi.
+
+```JAVASCRIPT
+   function addBookEntry() {
+    fetch("{% url 'main:add_book_entry_ajax' %}", {
+        method: "POST",
+        body: new FormData(document.querySelector('#bookEntryForm')),
+    })
+    .then(response => {
+        if (response.ok) {
+            refreshBookEntries();
+            document.getElementById("bookEntryForm").reset();
+            hideModal();
+        } 
+        else {
+            return response.json().then(errors => {
+                for (const [field, message] of Object.entries(errors)) {
+                    alert(`${message}`);  
+                }
+            });
+        }
+    })
+
+    return false; 
+   }
+```
+
+- Terakhir, saya menggunakan fungsi `refreshBookEntries` pada `main.html` yang memiliki keyword `async` sebelum fungsi untuk _refresh_ halaman utama secara _asynchronous_ dan akan menampilkan daftar buku tanpa reload halaman utama secara keseluruhan. `async` digunakan bersama dengan `await`, `await` akan menunggu fungsi dengan `async` untuk dijalankan agar `Promise` yang dikembalikan dapat digunakan. Fungsi ini akan menggunakan `fetch()` dan memperbarui DOM secara dinamis tanpa reload keseluruhan halaman.
+
+```JAVASCRIPT
+   async function refreshBookEntries() {
+      document.getElementById("book_entry_cards").innerHTML = "";
+      document.getElementById("book_entry_cards").className = "";
+      const bookEntries = await getBookEntries();
+      let htmlString = "";
+      let classNameString = "";
+
+      if (bookEntries.length === 0) {
+         classNameString = "flex flex-col items-center justify-center min-h-[24rem] p-6";
+         htmlString = `
+               <div class="flex flex-col items-center justify-center min-h-[24rem] p-6">
+                  <img src="{% static 'image/sedih-banget.png' %}" alt="Sad face" class="w-32 h-32 mb-4"/>
+                  <p class="text-center text-white mt-4">Belum ada data buku pada Bukulapak.</p>
+               </div>
+         `;
+      }
+      else {
+         classNameString = "columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6 w-full"
+         bookEntries.forEach((item) => {
+               const name = DOMPurify.sanitize(item.fields.name);
+               const description = DOMPurify.sanitize(item.fields.description);
+               htmlString += `
+               <div class="manrope relative break-inside-avoid">
+                  <div class="relative top-5 bg-gradient-to-r from-purple-300 via-indigo-400 to-violet-700 shadow-lg rounded-lg mb-6 break-inside-avoid flex flex-col border-2 border-indigo-300 transform hover:scale-105 transition-transform duration-300">
+                     <div class="bg-gradient-to-r from-purple-400 to-violet-800 text-black p-4 rounded-t-lg border-b-2 border-indigo-300">
+                           <h3 class="font-bold text-xl mb-2">${item.fields.name}</h3>
+                           <p class="text-black">Rp. ${item.fields.price}</p>
+                     </div>
+                     <div class="p-4">
+                           <p class="font-semibold text-lg mb-2">Description</p>
+                           <p class="text-black">${item.fields.description}</p>
+                           <div class="mt-4">
+                              <p class="text-black font-semibold mb-2">Stock</p>
+                              <div class="relative pt-1">
+                                 <div class="flex mb-2 items-center justify-between">
+                                       <div>
+                                          <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-indigo-600 bg-indigo-200">
+                                             ${item.fields.quantity}
+                                          </span>
+                                       </div>
+                                 </div>
+                                 <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-indigo-200">
+                                       <div style="width: ${item.fields.quantity > 10 ? 100 : item.fields.quantity * 10}%;" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-indigo-500"></div>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="flex justify-center space-x-4 mt-4">
+                              <a href="/edit-book/${item.pk}" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 shadow-md">
+                                 <i class="fas fa-edit"></i> Edit
+                              </a>
+                              <a href="/delete/${item.pk}" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 shadow-md">
+                                 <i class="fas fa-trash-alt"></i> Delete
+                              </a>
+                           </div>
+                     </div>
+                  </div>
+               </div>
+               `;
+         });
+      }
+      // Bagian ini akan memperbarui konten HTML dengan data buku terbaru tanpa reload halaman keseluruhan.
+      document.getElementById("book_entry_cards").className = classNameString;
+      document.getElementById("book_entry_cards").innerHTML = htmlString;
+   }
+```
 
 3. **Mengubah README.md.**
 
