@@ -45,7 +45,7 @@ Pembersihan data input pengguna dilakukan di _backend_ dan tidak pada _frontend_
       return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 ```
 
-- Selanjutnya, saya membuat fungsi JavaScript baru pada `main.html` bernama `getBookEntries` untuk melakukan _request_ AJAX `GET`. Fungsi ini menggunakan API `fetch()` untuk mengirim _request_ URL  yang sesuai dengan funsi `show_json`.
+- Selanjutnya, saya membuat fungsi JavaScript baru pada `main.html` bernama `getBookEntries` untuk melakukan _request_ AJAX `GET`. Fungsi ini menggunakan API `fetch()` untuk mengirim _request_ URL  yang sesuai dengan fungsi `show_json`.
 
 ```JAVASCRIPT
    async function getBookEntries(){
