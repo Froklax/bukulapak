@@ -53,7 +53,7 @@ Pembersihan data input pengguna dilakukan di _backend_ dan tidak pada _frontend_
    }
 ```
 
-- Terakhir, saya menambahkan `div` dengan `id="book_entry_cards"` dan membuat fungsi JavaScript bernama `refreshBookEntries` pada `main.html`. Fungsi ini menggunakan `await getBookEntries()` untuk mendapatkan data buku terbaru secara _asynchronous_. Fungsi ini juga memiliki string html yang memuat `card` buku yang menampilkan data berdasarkan hasil dari AJAX `GET` yaitu `fetch()` yang dilakukan oleh `getBookEntries`. Fungsi ini juga memperbarui elemen `book_entry_cards` dengan kelas CSS dan konten HTML yang dibuat.
+- Terakhir, saya menambahkan `div` dengan `id="book_entry_cards"` dan membuat fungsi JavaScript bernama `refreshBookEntries` pada `main.html`. Fungsi ini menggunakan `await getBookEntries()` dan keyword `async` di depan nama fungsi untuk mendapatkan data buku terbaru secara _asynchronous_. Fungsi ini juga memiliki string html yang memuat `card` buku yang menampilkan data berdasarkan hasil dari AJAX `GET`, yaitu `fetch()` yang dilakukan oleh `getBookEntries`. Fungsi ini juga memperbarui elemen `book_entry_cards` dengan kelas CSS dan konten HTML yang dibuat.
 
 ```HTML
    <div id="book_entry_cards"></div>
@@ -306,7 +306,7 @@ Pembersihan data input pengguna dilakukan di _backend_ dan tidak pada _frontend_
    }
 ```
 
-- Terakhir, saya menggunakan fungsi `refreshBookEntries` pada `main.html` yang memiliki keyword `async` sebelum fungsi untuk _refresh_ halaman utama secara _asynchronous_ dan akan menampilkan daftar buku tanpa reload halaman utama secara keseluruhan. `async` digunakan bersama dengan `await`, `await` akan menunggu fungsi dengan `async` untuk dijalankan agar `Promise` yang dikembalikan dapat digunakan. Fungsi ini akan menggunakan `fetch()` dan memperbarui DOM secara dinamis tanpa reload keseluruhan halaman.
+- Terakhir, saya menggunakan fungsi `refreshBookEntries` pada `main.html` yang memiliki keyword `async` sebelum fungsi untuk _refresh_ halaman utama secara _asynchronous_, dan akan menampilkan daftar buku tanpa reload halaman utama secara keseluruhan. `async` digunakan bersama dengan `await`, `await` akan menunggu fungsi dengan `async` untuk dijalankan agar `Promise` yang dikembalikan dapat digunakan. Fungsi ini akan menggunakan `fetch()` dan memperbarui DOM secara dinamis tanpa reload keseluruhan halaman.
 
 ```JAVASCRIPT
    async function refreshBookEntries() {
